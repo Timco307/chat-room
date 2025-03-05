@@ -1,5 +1,5 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-app.js";
-import { getFirestore, doc, setDoc, addDoc, collection, onSnapshot, serverTimestamp, query, orderBy, getDoc } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-firestore.js";
+import { initializeApp } from "./firebase-app.js";
+import { getFirestore, doc, setDoc, addDoc, collection, onSnapshot, serverTimestamp, query, orderBy, getDoc } from "./firebase-firestore.js";
 
 // Firebase configuration
 const firebaseConfig = {
@@ -110,46 +110,46 @@ function listenForMessages() {
 
 // Function to validate username
 async function validateUsername(username) {
-if (username.length > 40) {
-showToast("shorten ur username lol");
-return false;
-}
-if (await containsProfanity(username)) {
-showToast("you thought :P");
-return false;
-}
-return true;
+  if (username.length > 40) {
+    showToast("shorten ur username lol");
+    return false;
+  }
+  if (await containsProfanity(username)) {
+    showToast("you thought :P");
+    return false;
+  }
+  return true;
 }
 
 // Create a new room
 createRoomBtn.addEventListener("click", async () => {
-username = usernameInput.value.trim();
-if (!username) return showToast("you forgot your username ._.");
+  username = usernameInput.value.trim();
+  if (!username) return showToast("you forgot your username ._.");
 
-if (!(await validateUsername(username))) return; // Validate username
+  if (!(await validateUsername(username))) return; // Validate username
 
-roomId = Math.random().toString(36).substring(2, 8);
-await setDoc(doc(db, "rooms", roomId), {});
-roomTitle.textContent = `${roomId}`;
-showChatSection();
-listenForMessages();
+  roomId = Math.random().toString(36).substring(2, 8);
+  await setDoc(doc(db, "rooms", roomId), {});
+  roomTitle.textContent = `${roomId}`;
+  showChatSection();
+  listenForMessages();
 });
 
 // Join an existing room
 joinRoomBtn.addEventListener("click", async () => {
-username = usernameInput.value.trim();
-roomId = roomCodeInput.value.trim();
+  username = usernameInput.value.trim();
+  roomId = roomCodeInput.value.trim();
 
-if (!username || !roomId) return showToast("forgetting something? (room code and/or username)");
+  if (!username || !roomId) return showToast("forgetting something? (room code and/or username)");
 
-if (!(await validateUsername(username))) return; // Validate username
+  if (!(await validateUsername(username))) return; // Validate username
 
-const roomDoc = await getDoc(doc(db, "rooms", roomId));
-if (!roomDoc.exists()) return showToast("we couldn't find that room :(");
+  const roomDoc = await getDoc(doc(db, "rooms", roomId));
+  if (!roomDoc.exists()) return showToast("we couldn't find that room :(");
 
-roomTitle.textContent = `${roomId}`;
-showChatSection();
-listenForMessages();
+  roomTitle.textContent = `${roomId}`;
+  showChatSection();
+  listenForMessages();
 });
 
 // Send a message
@@ -160,9 +160,9 @@ messageInput.addEventListener("keydown", (e) => {
 
 async function sendMessage() {
   let message = messageInput.value.trim();
-  
+
   if (!message) return;
-  
+
   // Check if the message is longer than 100 characters
   if (message.length > 300 || message.length < 2) {
     showToast("stop trying to break the chat or spell something out.");
@@ -184,28 +184,23 @@ async function sendMessage() {
   messageInput.value = ""; // Clear the input field
 }
 
-
-
-
-
 // Leave the room and reload the page
 leaveRoomBtn.addEventListener("click", () => {
   location.reload();
 });
 
-
 const roomCodeElement = document.getElementById("room-id");
 roomCodeElement.addEventListener("click", () => {
-const roomCode = roomCodeElement.textContent.trim(); 
-console.log("Room Code: ", roomCode); 
-navigator.clipboard.writeText(roomCode)
-.then(() => showToast("code copied to clipboard :D"))
-.catch((error) => console.error("looks like we couldn't copy that text. \n error:", error));
+  const roomCode = roomCodeElement.textContent.trim();
+  console.log("Room Code: ", roomCode);
+  navigator.clipboard.writeText(roomCode)
+    .then(() => showToast("code copied to clipboard :D"))
+    .catch((error) => console.error("looks like we couldn't copy that text. \n error:", error));
 });
 
 if (event.key.length === 1 && event.key.match(/[a-z]/i)) {
-const textBox = document.getElementById('message-input');
-if (message-input) {
-  message-input.focus();
-}
+  const textBox = document.getElementById('message-input');
+  if (message-input) {
+    message-input.focus();
+  }
 }
